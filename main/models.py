@@ -1,7 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db.models import DateTimeField
 
+User = get_user_model()
 
 class Category(models.Model):
     name = models.CharField(
@@ -32,7 +33,7 @@ class Image(models.Model):
 
 # TODO: Сделать связь на таблицу User
 class Product(models.Model):
-    # user = models.ForeignKey()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(
         max_length=123,
         verbose_name="Название"
@@ -41,6 +42,11 @@ class Product(models.Model):
         Category,
         on_delete=models.PROTECT,
         verbose_name = 'Катогория'
+    )
+    main_image = models.ImageField(
+        upload_to='media/main_covers',
+        verbose_name='Главное фото',
+        help_text='Фото которое будет отабражаться на обложке объявлении'
     )
     images = models.ManyToManyField(
         Image,
@@ -61,13 +67,14 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
 
 # TODO: Сделать связь на таблицу User
 class Rating(models.Model):
-    # user = models.ForeignKey()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
@@ -97,7 +104,7 @@ class Rating(models.Model):
 
 # TODO: Сделать связь на таблицу User
 class RatingAnswer(models.Model):
-    # user = models.ForeignKey()
+    user = models.ForeignKey(User, on_delete=models.CASCADE , null=True)
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
