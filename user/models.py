@@ -57,7 +57,8 @@ class MyUser(AbstractBaseUser):
         upload_to='media/user_avatar',
         verbose_name='Аватарка',
         blank=True,
-        null=True
+        null=True,
+        default='media/user_avatar/default.jpg'
     )
     role = models.PositiveSmallIntegerField(
         choices=(
